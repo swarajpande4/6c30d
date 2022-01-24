@@ -1,0 +1,62 @@
+// Word search: https://practice.geeksforgeeks.org/problems/word-search/1/
+
+/*
+    Intuition:
+    We use backtracking. For each exploration path we maintain a visited array.
+    If the path does not lead to the end result reset the path and try another one.
+
+    We use Depth-first search for the same.
+*/
+
+class Solution 
+{
+public:
+
+    bool dfs(vector<vector<char>> &board, string word, int i, int j, int pos)
+    {
+        int m = board.size();
+        int n = board[0].size();
+
+        if(i < 0 || j < 0 || i >= m || j >= n)
+            return false;
+        
+        if(pos == word.length())
+            return true;
+        
+        if(word[pos] == board[i][j])
+        {
+            char temp = board[i][j];
+            board[i][j] = '#';
+            bool a = dfs(board, word, i + 1, j, pos + 1);
+            bool b = dfs(board, word, i - 1, j, pos + 1);
+            bool c = dfs(board, word, i, j + 1, pos + 1);
+            bool d = dfs(board, word, i, j - 1, pos + 1);
+            board[i][j] = temp;
+
+            return a || b || c || d;
+        }
+        
+        else 
+            return false;
+    }
+
+    bool isWordExist(vector<vector<char>> &board, string word)
+    {
+        int m = board.size();
+        int n = board[0].size();
+        
+        for(int i = 0; i < m; i++)
+        {
+            for(int j = 0; j < n; j++)
+            {
+                if(board[i][j] == word[0])
+                {
+                    if(dfs(board, word, i, j, 0))
+                        return true;
+                }
+            }
+        }
+
+        return false;
+    }
+};
