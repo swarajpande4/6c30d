@@ -36,13 +36,13 @@ public:
             // Removing all the elements which are smaller than 
             // the element added currently.
             while(!q.empty() && (arr[i] >= arr[q.back()])) 
-            q.pop_back();
+                q.pop_back();
 
             // Adding new element at the back of the deque
             q.push_back(i);
         }
 
-        // Finally the element at the front fo the deque is the largest
+        // Finally the element at the front of the deque is the largest
         // element of last window, so we simply add it to the list.
         res.push_back(arr[q.front()]);
         q.pop_front();
