@@ -63,3 +63,78 @@ public:
         return construct(A, &index);
     }
 };
+
+// Leetcode: https://leetcode.com/problems/serialize-and-deserialize-binary-tree/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Codec
+{
+public:
+    // Encodes a tree to a single string of preorder traversal.
+    string serialize(TreeNode *root)
+    {
+        if (root == NULL)
+            return "null";
+
+        string s;
+        s += to_string(root->val);
+
+        string serialLeft = serialize(root->left);
+        string serialRight = serialize(root->right);
+
+        return s + "," + serialLeft + "," + serialRight;
+    }
+
+    TreeNode *deserializeUtility(queue<string> &q)
+    {
+        if (q.empty())
+            return NULL;
+
+        string s = q.front();
+        q.pop();
+
+        if (s == "null")
+            return NULL;
+
+        int num = stoi(s);
+
+        TreeNode *node = new TreeNode(num);
+        node->left = deserializeUtility(q);
+        node->right = deserializeUtility(q);
+
+        return node;
+    }
+
+    // Decodes your encoded data to tree.
+    TreeNode *deserialize(string data)
+    {
+        queue<string> q;
+        string temp;
+
+        for (int i = 0; i < data.size(); i++)
+        {
+            if (data[i] == ',')
+            {
+                q.push(temp);
+                temp = "";
+            }
+
+            else
+                temp.push_back(data[i]);
+        }
+
+        return deserializeUtility(q);
+    }
+};
+
+// Your Codec object will be instantiated and called as such:
+// Codec ser, deser;
+// TreeNode* ans = deser.deserialize(ser.serialize(root));
